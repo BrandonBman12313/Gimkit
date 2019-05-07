@@ -2,12 +2,14 @@
 Using a Dynamic Programming algorithm to search for the optimal Gimkit strategy.
 
 ## How to use
-`// Initial conditions
+```
+// Initial conditions
 // Change these values to alter the initial state
 ll start = 0, goal = 1e10;
 int max_it = 150; // Number of iterations to solve
 int MPQ = 0, SB = 0, M = 0; // Initial upgrade status
-int D = 0, R = 0, B1 = 0, B2 = 0; // Initial power-up status`
+int D = 0, R = 0, B1 = 0, B2 = 0; // Initial power-up status
+```
 
 Change these values to alter the initial state:
 * **start** - Starting amount of money
