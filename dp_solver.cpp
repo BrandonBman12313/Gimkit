@@ -5,14 +5,14 @@ using namespace std;
 typedef long long ll;
 
 // DP Gimkit Solver
-// Developed by SAMCHOOO
+// Developed by Ta180m
 
 // Initial conditions
 ll start = 0, goal = 1e10;
 int it = 150;
 
 // State: Iteration, Upgrade status, Power-up status
-ll DP[200][1000][36];
+ll DP[200][1000][36], pre[7200000];
 
 // Upgrade values and costs
 double val[3][10] = {
@@ -48,67 +48,76 @@ int main() {
                     // Answer a question
                     if (money + inc > DP[i + 1][j][k]) {
                         DP[i + 1][j][k] = money + inc;
-                        // pre[v] = u;
+                        pre[36000 * (i + 1) + 36 * j + k] = 36000 * i + 36 * j + k;
                     }
                     
                     // Answer a question using the mini bonus
-                    if (B1 == 1 && 2 * money + inc > DP[i + 1][j][k + 3]) {
-                        DP[i + 1][j][k + 3] = 2 * money + inc;
-                        // pre[v] = u;
+                    if (B1 == 1 && money + 2 * inc > DP[i + 1][j][k + 3]) {
+                        DP[i + 1][j][k + 3] = money + 2 * inc;
+                        pre[36000 * (i + 1) + 36 * j + k + 3] = 36000 * i + 36 * j + k;
                     }
                     
                     // Answer a question using the mega bonus
-                    if (B2 == 1 && 5 * money + inc > DP[i + 1][j][k + 1]) {
-                        DP[i + 1][j][k + 1] = 5 * money + inc;
-                        // pre[v] = u;
+                    if (B2 == 1 && money + 5 * inc > DP[i + 1][j][k + 1]) {
+                        DP[i + 1][j][k + 1] = money + 5 * inc;
+                        pre[36000 * (i + 1) + 36 * j + k + 1] = 36000 * i + 36 * j + k;
                     }
                     
                     // Answer a question using both the mini bonus and the mega bonus
-                    if (B1 == 1 && B2 == 1 && 10 * money + inc > DP[i + 1][j][k + 4]) {
-                        DP[i + 1][j][k + 4] = 10 * money + inc;
-                        // pre[v] = u;
+                    if (B1 == 1 && B2 == 1 && money + 10 * inc > DP[i + 1][j][k + 4]) {
+                        DP[i + 1][j][k + 4] = money + 10 * inc;
+                        pre[36000 * (i + 1) + 36 * j + k + 4] = 36000 * i + 36 * j + k;
                     }
                     
                     // Upgrade money per question
-                    if (MPQ < 9 && money >= cost[D][0][MPQ + 1] && money - cost[D][0][MPQ + 1] > DP[i][j + 100][k]) {
-                        DP[i][j + 100][k] = money - cost[D][0][MPQ + 1];
-                        // pre[v] = u;
+                    int l = MPQ;
+                    while (++l < 10 && money >= cost[D][0][l]) {
+                        if (money - cost[D][0][l] > DP[i][j + 100 * l][k]) {
+                            DP[i][j + 100 * l][k] = money - cost[D][0][l];
+                            pre[36000 * i + 36 * (j + 100 * l) + k] = 36000 * i + 36 * j + k;
+                        }
                     }
                     
                     // Upgrade streak bonus
-                    if (SB < 9 && money >= cost[D][1][SB + 1] && money - cost[D][1][SB + 1] > DP[i][j + 10][k]) {
-                        DP[i][j + 10][k] = money - cost[D][1][SB + 1];
-                        // pre[v] = u;
+                    l = SB;
+                    while (++l < 10 && money >= cost[D][1][l]) {
+                        if (money - cost[D][1][l] > DP[i][j + 10 * l][k]) {
+                            DP[i][j + 10 * l][k] = money - cost[D][1][l];
+                            pre[36000 * i + 36 * (j + 10 * l) + k] = 36000 * i + 36 * j + k;
+                        }
                     }
                     
                     // Upgrade multiplier
-                    if (M < 9 && money >= cost[D][2][M + 1] && money - cost[D][2][M + 1] > DP[i][j + 1][k]) {
-                        DP[i][j + 1][k] = money - cost[D][2][M + 1];
-                        // pre[v] = u;
+                    l = M;
+                    while (++l < 10 && money >= cost[D][2][l]) {
+                        if (money - cost[D][2][l] > DP[i][j + l][k]) {
+                            DP[i][j + l][k] = money - cost[D][2][l];
+                            pre[36000 * i + 36 * (j + l) + k] = 36000 * i + 36 * j + k;
+                        }
                     }
                     
                     // Buy the discounter
                     if (D == 0 && money >= calc_pcost(0, money) && money - calc_pcost(0, money) > DP[i][j][k + 18]) {
                         DP[i][j][k + 18] = money - calc_pcost(0, money);
-                        // pre[v] = u;
+                        pre[36000 * i + 36 * j + k + 18] = 36000 * i + 36 * j + k;
                     }
                     
                     // Buy the rebooter
                     if (R == 0 && money >= calc_pcost(1, money) && money - calc_pcost(1, money) > DP[i][j][9]) {
                         DP[i][j][9] = money - calc_pcost(1, money);
-                        // pre[v] = u;
+                        pre[36000 * i + 36 * j + 9] = 36000 * i + 36 * j + k;
                     }
                     
                     // Buy the mini bonus
                     if (B1 == 0 && money >= calc_pcost(2, money) && money - calc_pcost(2, money) > DP[i][j][k + 2]) {
                         DP[i][j][k + 2] = money - calc_pcost(2, money);
-                        // pre[v] = u;
+                        pre[36000 * i + 36 * j + k + 2] = 36000 * i + 36 * j + k;
                     }
                     
                     // Buy the mega bonus
                     if (B2 == 0 && money >= calc_pcost(3, money) && money - calc_pcost(3, money) > DP[i][j][k + 1]) {
                         DP[i][j][k + 1] = money - calc_pcost(3, money);
-                        // pre[v] = u;
+                        pre[36000 * i + 36 * j + k + 1] = 36000 * i + 36 * j + k;
                     }
                 }
             }
@@ -122,7 +131,10 @@ int main() {
             for (int k = 0; k < 36; k++) {
                 // int D = (k / 18) % 2, R = (k / 9) % 2, B1 = (k / 3) % 3, B2 = k % 3;
                 if (DP[i][j][k] > goal) {
-                    cout << i << " " << j << " " << k << endl;
+                    for (int p = 36000 * i + 36 * j + k; p != 0; p = pre[p]) {
+                        int a = p / 36000, b = (p / 36) % 1000, c = p % 36;
+                        cout << DP[a][b][c] << " " << a << " " << b << " " << c << endl;
+                    }
                     
                     /*for (state p = u; !(p == s); p = pre[p]) {
                         cout << p.MPQ << " " << p.SB << " " << p.M << " " << p.D << " " << p.R << " " << p.B1 << " " << p.B2 << endl;
