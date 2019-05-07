@@ -30,8 +30,8 @@ ll cost[2][3][10] = {
 };
 
 // Power-up costs
-int pcost[4] = { 20, 50, 250, 1000 };
-double pcentcost[4] = { 0.03, 0.06, 0.16, 0.30 };
+int pcost[4] = { 250, 1000, 20, 50 };
+double pcentcost[4] = { 0.16, 0.30, 0.03, 0.06 };
 ll calc_pcost(int i, ll money) { return 5 * ceil((double)(pcentcost[i] * money + pcost[i]) / 5); }
 
 int main() {
@@ -42,8 +42,8 @@ int main() {
             int MPQ = j / 100, SB = (j / 10) % 10, M = j % 10;
             for (int k = 0; k < 36; k++) {
                 if (DP[i][j][k] != -1) {
-                    int D = (j / 18) % 2, R = (j / 9) % 2, B1 = (j / 3) % 3, B2 = j % 3;
-                    ll money = DP[i][j][k], inc = round((val[0][MPQ] + val[1][SB]) * val[2][M]);
+                    int D = (k / 18) % 2, R = (k / 9) % 2, B1 = (k / 3) % 3, B2 = k % 3;
+                    ll money = DP[i][j][k], inc = round((val[0][MPQ] + (i != 0 ? val[1][SB] : 0)) * val[2][M]);
                     
                     // Answer a question
                     if (money + inc > DP[i + 1][j][k]) {
@@ -70,44 +70,44 @@ int main() {
                     }
                     
                     // Upgrade money per question
-                    if (MPQ < 9 && money - cost[D][0][MPQ + 1] > DP[i][j + 100][k]) {
+                    if (MPQ < 9 && money >= cost[D][0][MPQ + 1] && money - cost[D][0][MPQ + 1] > DP[i][j + 100][k]) {
                         DP[i][j + 100][k] = money - cost[D][0][MPQ + 1];
                         // pre[v] = u;
                     }
                     
                     // Upgrade streak bonus
-                    if (SB < 9 && money - cost[D][1][SB + 1] > DP[i][j + 10][k]) {
+                    if (SB < 9 && money >= cost[D][1][SB + 1] && money - cost[D][1][SB + 1] > DP[i][j + 10][k]) {
                         DP[i][j + 10][k] = money - cost[D][1][SB + 1];
                         // pre[v] = u;
                     }
                     
                     // Upgrade multiplier
-                    if (M < 9 && money - cost[D][2][M + 1] > DP[i][j + 1][k]) {
+                    if (M < 9 && money >= cost[D][2][M + 1] && money - cost[D][2][M + 1] > DP[i][j + 1][k]) {
                         DP[i][j + 1][k] = money - cost[D][2][M + 1];
                         // pre[v] = u;
                     }
                     
                     // Buy the discounter
-                    if (D == 0 && money - calc_pcost(2, money) > DP[i][j][k + 18]) {
-                        DP[i][j][k + 18] = money - calc_pcost(2, money);
+                    if (D == 0 && money >= calc_pcost(0, money) && money - calc_pcost(0, money) > DP[i][j][k + 18]) {
+                        DP[i][j][k + 18] = money - calc_pcost(0, money);
                         // pre[v] = u;
                     }
                     
                     // Buy the rebooter
-                    if (R == 0 && money - calc_pcost(3, money) > DP[i][j][9]) {
-                        DP[i][j][9] = money - calc_pcost(3, money);
+                    if (R == 0 && money >= calc_pcost(1, money) && money - calc_pcost(1, money) > DP[i][j][9]) {
+                        DP[i][j][9] = money - calc_pcost(1, money);
                         // pre[v] = u;
                     }
                     
                     // Buy the mini bonus
-                    if (B1 == 0 && money - calc_pcost(0, money) > DP[i][j][k + 2]) {
-                        DP[i][j][k + 2] = money - calc_pcost(0, money);
+                    if (B1 == 0 && money >= calc_pcost(2, money) && money - calc_pcost(2, money) > DP[i][j][k + 2]) {
+                        DP[i][j][k + 2] = money - calc_pcost(2, money);
                         // pre[v] = u;
                     }
                     
                     // Buy the mega bonus
-                    if (B2 == 0 && money - calc_pcost(1, money) > DP[i][j][k + 1]) {
-                        DP[i][j][k + 1] = money - calc_pcost(1, money);
+                    if (B2 == 0 && money >= calc_pcost(3, money) && money - calc_pcost(3, money) > DP[i][j][k + 1]) {
+                        DP[i][j][k + 1] = money - calc_pcost(3, money);
                         // pre[v] = u;
                     }
                 }
@@ -158,4 +158,3 @@ int main() {
     }
     cout << "Total questions: " << DP[999] + 2 << endl;*/
 }
-
