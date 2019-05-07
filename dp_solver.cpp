@@ -72,27 +72,27 @@ int main() {
                     // Upgrade money per question
                     int l = MPQ;
                     while (++l < 10 && money >= cost[D][0][l]) {
-                        if (money - cost[D][0][l] > DP[i][j + 100 * l][k]) {
-                            DP[i][j + 100 * l][k] = money - cost[D][0][l];
-                            pre[36000 * i + 36 * (j + 100 * l) + k] = 36000 * i + 36 * j + k;
+                        if (money - cost[D][0][l] > DP[i][j + 100 * (l - MPQ)][k]) {
+                            DP[i][j + 100 * (l - MPQ)][k] = money - cost[D][0][l];
+                            pre[36000 * i + 36 * (j + 100 * (l - MPQ)) + k] = 36000 * i + 36 * j + k;
                         }
                     }
                     
                     // Upgrade streak bonus
                     l = SB;
                     while (++l < 10 && money >= cost[D][1][l]) {
-                        if (money - cost[D][1][l] > DP[i][j + 10 * l][k]) {
-                            DP[i][j + 10 * l][k] = money - cost[D][1][l];
-                            pre[36000 * i + 36 * (j + 10 * l) + k] = 36000 * i + 36 * j + k;
+                        if (money - cost[D][1][l] > DP[i][j + 10 * (l - SB)][k]) {
+                            DP[i][j + 10 * (l - SB)][k] = money - cost[D][1][l];
+                            pre[36000 * i + 36 * (j + 10 * (l - SB)) + k] = 36000 * i + 36 * j + k;
                         }
                     }
                     
                     // Upgrade multiplier
                     l = M;
                     while (++l < 10 && money >= cost[D][2][l]) {
-                        if (money - cost[D][2][l] > DP[i][j + l][k]) {
-                            DP[i][j + l][k] = money - cost[D][2][l];
-                            pre[36000 * i + 36 * (j + l) + k] = 36000 * i + 36 * j + k;
+                        if (money - cost[D][2][l] > DP[i][j + l - M][k]) {
+                            DP[i][j + l - M][k] = money - cost[D][2][l];
+                            pre[36000 * i + 36 * (j + l - M) + k] = 36000 * i + 36 * j + k;
                         }
                     }
                     
