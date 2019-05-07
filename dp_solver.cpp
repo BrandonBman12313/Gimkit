@@ -116,7 +116,7 @@ int main() {
                 }
             }
             
-            // Upgrade streak bonus
+            // Upgrade multiplier
             for (int j = M + 1; j < 10 && DP[i] >= cost[D][2][j]; j++) {
                 if (DP[i] - cost[D][2][j] > DP[i + 36 * (j - M)]) {
                     DP[i + 36 * (j - M)] = DP[i] - cost[D][2][j];
@@ -131,9 +131,9 @@ int main() {
             }
             
             // Buy the rebooter
-            if (R == 0 && DP[i] - pcost(1, DP[i]) > DP[i - i % 36 + 9]) {
-                DP[i - i % 36 + 9] = DP[i] - pcost(1, DP[i]);
-                pre[i - i % 36 + 9] = i;
+            if (R == 0 && DP[i] - pcost(1, DP[i]) > DP[i - i % 9 + 9]) {
+                DP[i - i % 9 + 9] = DP[i] - pcost(1, DP[i]);
+                pre[i - i % 9 + 9] = i;
             }
             
             // Buy the mini bonus
@@ -167,19 +167,67 @@ int main() {
             int it = output[i] / 36000;
             int MPQ = (output[i] / 3600) % 10, SB = (output[i] / 360) % 10, M = (output[i] / 36) % 10;
             int D = (output[i] / 18) % 2, R = (output[i] / 9) % 2, B1 = (output[i] / 3) % 3, B2 = output[i] % 3;
+            
+            // Output iteration
             if (it != output[i - 1] / 36000) cout << right << setw(3) << it << ". ";
             else cout << "     ";
-            if (it != output[i - 1] / 36000 && B1 == (output[i - 1] / 3) % 3 && B2 == output[i - 1] % 3) cout << "Answer 1 question, bringing your total up to $" << format(DP[output[i]]) << endl;
-            else if (it != output[i - 1] / 36000 && B1 != (output[i - 1] / 3) % 3 && B2 == output[i - 1] % 3) cout << "Answer 1 question using the mini bonus, bringing your total up to $" << format(DP[output[i]]) << endl;
-            else if (it != output[i - 1] / 36000 && B1 == (output[i - 1] / 3) % 3 && B2 != output[i - 1] % 3) cout << "Answer 1 question using the mega bonus, bringing your total up to $" << format(DP[output[i]]) << endl;
-            else if (it != output[i - 1] / 36000 && B1 != (output[i - 1] / 3) % 3 && B2 != output[i - 1] % 3) cout << "Answer 1 question using both the mini and mega bonuses, bringing your total up to $" << format(DP[output[i]]) << endl;
-            else if (MPQ != (output[i - 1] / 3600) % 10) cout << "Buy the Level " << MPQ << " ($" << format(val[0][MPQ]) << ") money per question upgrade for $" << format(cost[D][0][MPQ]) << ", making your total $" << format(DP[output[i]]) << endl;
-            else if (SB != (output[i - 1] / 360) % 10) cout << "Buy the Level " << SB << " ($" << format(val[1][SB]) << ") streak bonus upgrade for $" << format(cost[D][1][SB]) << ", making your total $" << format(DP[output[i]]) << endl;
-            else if (M != (output[i - 1] / 36) % 10) cout << "Buy the Level " << M << " (x" << format(val[2][M]) << ") multiplier for $" << format(cost[D][2][M]) << ", making your total $" << format(DP[output[i]]) << endl;
-            else if (D != (output[i - 1] / 18) % 2) cout << "Buy and use the discounter for $" << format(pcost(0, DP[output[i - 1]])) << ", making your total $" << format(DP[output[i]]) << endl;
-            else if (R != (output[i - 1] / 9) % 2) cout << "Buy and use the rebooter for $" << format(pcost(1, DP[output[i - 1]])) << ", making your total $" << format(DP[output[i]]) << endl;
-            else if (B1 != (output[i - 1] / 3) % 3) cout << "Buy the mini bonus for $" << format(pcost(2, DP[output[i - 1]])) << ", making your total $" << format(DP[output[i]]) << endl;
-            else if (B2 != output[i - 1] % 3) cout << "Buy the mega bonus for $" << format(pcost(3, DP[output[i - 1]])) << ", making your total $" << format(DP[output[i]]) << endl;
+            
+            // Answer a question
+            if (it != output[i - 1] / 36000 && B1 == (output[i - 1] / 3) % 3 && B2 == output[i - 1] % 3) {
+                cout << "Answer 1 question, bringing your total up to $" << format(DP[output[i]]) << endl;
+            }
+            
+            // Answer a question with the mini bonus
+            else if (it != output[i - 1] / 36000 && B1 != (output[i - 1] / 3) % 3 && B2 == output[i - 1] % 3) {
+                cout << "Answer 1 question using the mini bonus, bringing your total up to $" << format(DP[output[i]]) << endl;
+            }
+            
+            // Answer a question using the mega bonus
+            else if (it != output[i - 1] / 36000 && B1 == (output[i - 1] / 3) % 3 && B2 != output[i - 1] % 3) {
+                cout << "Answer 1 question using the mega bonus, bringing your total up to $" << format(DP[output[i]]) << endl;
+            }
+            
+            // Answer a question using both the mini and mega bonuses
+            else if (it != output[i - 1] / 36000 && B1 != (output[i - 1] / 3) % 3 && B2 != output[i - 1] % 3) {
+                cout << "Answer 1 question using both the mini and mega bonuses, bringing your total up to $" << format(DP[output[i]]) << endl;
+            }
+            
+            // Upgrade money per question
+            else if (MPQ != (output[i - 1] / 3600) % 10) {
+                cout << "Buy the Level " << MPQ << " ($" << format(val[0][MPQ]) << ") money per question upgrade for $" << format(cost[D][0][MPQ]) << ", making your total $" << format(DP[output[i]]) << endl;
+            }
+            
+            // Upgrade streak bonus
+            else if (SB != (output[i - 1] / 360) % 10) {
+                cout << "Buy the Level " << SB << " ($" << format(val[1][SB]) << ") streak bonus upgrade for $" << format(cost[D][1][SB]) << ", making your total $" << format(DP[output[i]]) << endl;
+            }
+            
+            // Upgrade multiplier
+            else if (M != (output[i - 1] / 36) % 10) {
+                cout << "Buy the Level " << M << " (x" << format(val[2][M]) << ") multiplier for $" << format(cost[D][2][M]) << ", making your total $" << format(DP[output[i]]) << endl;
+            }
+            
+            // Buy the discounter
+            else if (D != (output[i - 1] / 18) % 2) {
+                cout << "Buy and use the discounter for $" << format(pcost(0, DP[output[i - 1]])) << ", making your total $" << format(DP[output[i]]) << endl;
+            }
+            
+            // Buy the rebooter
+            else if (R != (output[i - 1] / 9) % 2) {
+                cout << "Buy and use the rebooter for $" << format(pcost(1, DP[output[i - 1]])) << ", making your total $" << format(DP[output[i]]) << endl;
+            }
+            
+            // Buy the mini bonus
+            else if (B1 != (output[i - 1] / 3) % 3) {
+                cout << "Buy the mini bonus for $" << format(pcost(2, DP[output[i - 1]])) << ", making your total $" << format(DP[output[i]]) << endl;
+            }
+            
+            // Buy the mega bonus
+            else if (B2 != output[i - 1] % 3) {
+                cout << "Buy the mega bonus for $" << format(pcost(3, DP[output[i - 1]])) << ", making your total $" << format(DP[output[i]]) << endl;
+            }
+            
+            // Error
             else cout << "Error: Something went wrong" << endl;
         }
     }
