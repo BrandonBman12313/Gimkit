@@ -11,14 +11,18 @@ typedef long long ll;
 // DP Gimkit Solver
 // Developed by Ta180m
 
-// start conditions
+// Initial conditions
 ll start = 0, goal = 1e10;
 int max_it = 150; // Number of iterations to solve
-int MPQ = 0, SB = 0, M = 0; // start upgrade status
-int D, R, B1, B2; // start power-up status
+int MPQ = 0, SB = 0, M = 0; // Initial upgrade status
+int D, R, B1, B2; // Initial power-up status
+
+// Initial state
 int s = 3600 * MPQ + 360 * SB + 36 * M + 18 * D + 9 * R + 3 * B1 + B2;
 
 // State: Iteration, Upgrade status, Power-up status
+// DP stores maximum possible money for each state
+// pre used to reconstruct optimal strategy
 ll DP[7200000], pre[7200000];
 
 // Upgrade values
@@ -43,7 +47,7 @@ int base[4] = { 250, 1000, 20, 50 };
 double pcent[4] = { 0.16, 0.30, 0.03, 0.06 };
 ll pcost(int i, ll x) { return 5 * ceil((double)(pcent[i] * x + base[i]) / 5); }
 
-// Utility function
+// Utility function to format output
 string format(ll x) {
     string ret = to_string(x);
     int pos = ret.length() - 3;
@@ -54,15 +58,21 @@ string format(ll x) {
     return ret;
 }
 
+// Bottom-up DP algorithm
 int main() {
+    // Initialize DP array
     memset(DP, -1, sizeof(DP));
     
+    // Set initial value
     DP[s] = start;
     for (int i = 0; i < 36000 * max_it; i++) {
         if (DP[i] != -1) {
+            // Calculate parameters
             int it = i / 36000;
             int MPQ = (i / 3600) % 10, SB = (i / 360) % 10, M = (i / 36) % 10;
             int D = (i / 18) % 2, R = (i / 9) % 2, B1 = (i / 3) % 3, B2 = i % 3;
+            
+            // Income per question
             ll inc = round((val[0][MPQ] + (i != 0 ? val[1][SB] : 0)) * val[2][M]);
             
             // Answer a question
@@ -139,12 +149,14 @@ int main() {
         }
     }
     
+    // Find the optimal solution
     int sol = 7200000;
     for (int i = 0; i < 36000 * max_it; i++) {
         if (i / 36000 > sol / 36000) break;
         if (DP[i] >= goal && (sol == 7200000 || DP[i] > DP[sol])) sol = i;
     }
     
+    // Print output
     if (sol != 7200000) {
         vector<int> output;
         for (int i = sol; i != s; i = pre[i]) output.push_back(i);
