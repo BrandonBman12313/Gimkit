@@ -1,5 +1,5 @@
 # Gimkit
-Using a Dynamic Programming algorithm to search for the optimal Gimkit strategy.
+Ever wondered about what the optimal [Gimkit](https://gimkit.com) strategy is? Well, now you can get a definite answer with `dp_solver.cpp`, which uses a Dynamic Programming algorithm to search for the optimal Gimkit strategy. This algorithm can calculate the optimal strategy from any arbitary starting state.
 
 ## How to use
 ```
@@ -22,3 +22,6 @@ Change these values to alter the initial state:
 * **R** - The status of the rebooter power-up (0 is unpurchased, 1 is purchased and used)
 * **B1** - The status of the mini bonus power-up (0 is unpurchased, 1 is purchased and unused, 2 is used)
 * **B2** - The status of the mega bonus power-up (0 is unpurchased, 1 is purchased and unused, 2 is used)
+
+## How it works
+*Coming soon*
