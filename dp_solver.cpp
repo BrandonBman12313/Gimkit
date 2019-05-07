@@ -13,17 +13,14 @@ typedef long long ll;
 
 // Initial conditions
 // Change these values to alter the initial state
-ll start = 0, goal = 1e10;
+ll start = 0, goal = 1e10; // Start and end amounts
 int max_it = 150; // Number of iterations to solve
 int MPQ = 0, SB = 0, M = 0; // Initial upgrade status
 int D = 0, R = 0, B1 = 0, B2 = 0; // Initial power-up status
 
-// Initial state
-int s = 3600 * MPQ + 360 * SB + 36 * M + 18 * D + 9 * R + 3 * B1 + B2;
-
 // State: Iteration, Upgrade status, Power-up status
-// DP stores maximum possible money for each state
-// pre used to reconstruct optimal strategy
+// DP array stores maximum possible money for each state
+// pre array used to reconstruct optimal strategy
 ll DP[7200000], pre[7200000];
 
 // Upgrade values
@@ -63,6 +60,9 @@ string format(ll x) {
 int main() {
     // Initialize DP array
     memset(DP, -1, sizeof(DP));
+    
+    // Calculate initial state
+    int s = 3600 * MPQ + 360 * SB + 36 * M + 18 * D + 9 * R + 3 * B1 + B2;
     
     // Set initial value
     DP[s] = start;
@@ -138,8 +138,8 @@ int main() {
             
             // Buy the mini bonus
             if (B1 == 0 && DP[i] - pcost(2, DP[i]) > DP[i + 2]) {
-                DP[i + 2] = DP[i] - pcost(2, DP[i]);
-                pre[i + 2] = i;
+                DP[i + 3] = DP[i] - pcost(2, DP[i]);
+                pre[i + 3] = i;
             }
             
             // Buy the mega bonus
