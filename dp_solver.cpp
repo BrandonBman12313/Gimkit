@@ -12,10 +12,11 @@ typedef long long ll;
 // Developed by Ta180m
 
 // Initial conditions
+// Change these values to alter the initial state
 ll start = 0, goal = 1e10;
 int max_it = 150; // Number of iterations to solve
 int MPQ = 0, SB = 0, M = 0; // Initial upgrade status
-int D, R, B1, B2; // Initial power-up status
+int D = 0, R = 0, B1 = 0, B2 = 0; // Initial power-up status
 
 // Initial state
 int s = 3600 * MPQ + 360 * SB + 36 * M + 18 * D + 9 * R + 3 * B1 + B2;
