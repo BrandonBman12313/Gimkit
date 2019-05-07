@@ -1,4 +1,8 @@
 #include <iostream>
+#include <iomanip>
+#include <algorithm>
+#include <vector>
+#include <string>
 #include <cstring>
 #include <cmath>
 using namespace std;
@@ -7,24 +11,15 @@ typedef long long ll;
 // DP Gimkit Solver
 // Developed by Ta180m
 
-// Initial conditions
+// start conditions
 ll start = 0, goal = 1e10;
 int max_it = 150; // Number of iterations to solve
-// int MPQ = 0, SB = 0, M = 0; // Initial upgrade status
-// int D, R, B1, B2; // Initial power-up status
+int MPQ = 0, SB = 0, M = 0; // start upgrade status
+int D, R, B1, B2; // start power-up status
+int s = 3600 * MPQ + 360 * SB + 36 * M + 18 * D + 9 * R + 3 * B1 + B2;
 
 // State: Iteration, Upgrade status, Power-up status
 ll DP[7200000], pre[7200000];
-
-// Return DP array element from state
-ll& get_DP(int it, int MPQ, int SB, int M, int D, int R, int B1, int B2) {
-    return DP[36000 * it + 3600 * MPQ + 360 * SB + 36 *M + 18 * D + 9 * R + 3 * B1 + B2];
-}
-
-// Return pre array element from state
-ll& get_pre(int it, int MPQ, int SB, int M, int D, int R, int B1, int B2) {
-    return pre[36000 * it + 3600 * MPQ + 360 * SB + 36 *M + 18 * D + 9 * R + 3 * B1 + B2];
-}
 
 // Upgrade values
 double val[3][10] = {
@@ -48,11 +43,21 @@ int base[4] = { 250, 1000, 20, 50 };
 double pcent[4] = { 0.16, 0.30, 0.03, 0.06 };
 ll pcost(int i, ll x) { return 5 * ceil((double)(pcent[i] * x + base[i]) / 5); }
 
+// Utility function
+string format(ll x) {
+    string ret = to_string(x);
+    int pos = ret.length() - 3;
+    while (pos > 0) {
+        ret.insert(pos, ",");
+        pos -= 3;
+    }
+    return ret;
+}
 
 int main() {
     memset(DP, -1, sizeof(DP));
     
-    get_DP(0, 0, 0, 0, 0, 0, 0, 0) = start;
+    DP[s] = start;
     for (int i = 0; i < 36000 * max_it; i++) {
         if (DP[i] != -1) {
             int it = i / 36000;
@@ -134,15 +139,36 @@ int main() {
         }
     }
     
+    int sol = 7200000;
     for (int i = 0; i < 36000 * max_it; i++) {
-        if (DP[i] >= goal) {
-            for (int j = i; j != 0; j = pre[j]) {
-                int it = j / 36000;
-                int MPQ = (j / 3600) % 10, SB = (j / 360) % 10, M = (j / 36) % 10;
-                int D = (j / 18) % 2, R = (j / 9) % 2, B1 = (j / 3) % 3, B2 = j % 3;
-                cout << DP[j] << " " << it << " " << MPQ << " " << SB << " " << M << " " << D << " " << R << " " << B1 << " " << B2 << endl;
-            }
-            return 0;
+        if (i / 36000 > sol / 36000) break;
+        if (DP[i] >= goal && (sol == 7200000 || DP[i] > DP[sol])) sol = i;
+    }
+    
+    if (sol != 7200000) {
+        vector<int> output;
+        for (int i = sol; i != s; i = pre[i]) output.push_back(i);
+        reverse(output.begin(), output.end());
+        cout << "Iterations: " << sol / 36000 << endl;
+        for (int i = 0; i < output.size(); i++) {
+            int it = output[i] / 36000;
+            int MPQ = (output[i] / 3600) % 10, SB = (output[i] / 360) % 10, M = (output[i] / 36) % 10;
+            int D = (output[i] / 18) % 2, R = (output[i] / 9) % 2, B1 = (output[i] / 3) % 3, B2 = output[i] % 3;
+            if (it != output[i - 1] / 36000) cout << right << setw(3) << it << ". ";
+            else cout << "     ";
+            if (it != output[i - 1] / 36000 && B1 == (output[i - 1] / 3) % 3 && B2 == output[i - 1] % 3) cout << "Answer 1 question, bringing your total up to $" << format(DP[output[i]]) << endl;
+            else if (it != output[i - 1] / 36000 && B1 != (output[i - 1] / 3) % 3 && B2 == output[i - 1] % 3) cout << "Answer 1 question using the mini bonus, bringing your total up to $" << format(DP[output[i]]) << endl;
+            else if (it != output[i - 1] / 36000 && B1 == (output[i - 1] / 3) % 3 && B2 != output[i - 1] % 3) cout << "Answer 1 question using the mega bonus, bringing your total up to $" << format(DP[output[i]]) << endl;
+            else if (it != output[i - 1] / 36000 && B1 != (output[i - 1] / 3) % 3 && B2 != output[i - 1] % 3) cout << "Answer 1 question using both the mini and mega bonuses, bringing your total up to $" << format(DP[output[i]]) << endl;
+            else if (MPQ != (output[i - 1] / 3600) % 10) cout << "Buy the Level " << MPQ << " ($" << format(val[0][MPQ]) << ") money per question upgrade for $" << format(cost[D][0][MPQ]) << ", making your total $" << format(DP[output[i]]) << endl;
+            else if (SB != (output[i - 1] / 360) % 10) cout << "Buy the Level " << SB << " ($" << format(val[1][SB]) << ") streak bonus upgrade for $" << format(cost[D][1][SB]) << ", making your total $" << format(DP[output[i]]) << endl;
+            else if (M != (output[i - 1] / 36) % 10) cout << "Buy the Level " << M << " (x" << format(val[2][M]) << ") multiplier for $" << format(cost[D][2][M]) << ", making your total $" << format(DP[output[i]]) << endl;
+            else if (D != (output[i - 1] / 18) % 2) cout << "Buy and use the discounter for $" << format(pcost(0, DP[output[i - 1]])) << ", making your total $" << format(DP[output[i]]) << endl;
+            else if (R != (output[i - 1] / 9) % 2) cout << "Buy and use the rebooter for $" << format(pcost(1, DP[output[i - 1]])) << ", making your total $" << format(DP[output[i]]) << endl;
+            else if (B1 != (output[i - 1] / 3) % 3) cout << "Buy the mini bonus for $" << format(pcost(2, DP[output[i - 1]])) << ", making your total $" << format(DP[output[i]]) << endl;
+            else if (B2 != output[i - 1] % 3) cout << "Buy the mega bonus for $" << format(pcost(3, DP[output[i - 1]])) << ", making your total $" << format(DP[output[i]]) << endl;
+            else cout << "Error: Something went wrong" << endl;
         }
     }
+    else cout << "No strategy to reach $" << goal << " from $" << start << " in " << max_it << " iterations could be found" << endl;
 }
