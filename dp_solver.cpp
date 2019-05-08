@@ -66,8 +66,14 @@ int main() {
     
     // Set initial value
     DP[s] = start;
+    
+    // Find the optimal solution
+    int sol = 7200000;
     for (int i = 0; i < 36000 * max_it; i++) {
         if (DP[i] != -1) {
+            if (i / 36000 > sol / 36000) break;
+            if (DP[i] >= goal && (sol == 7200000 || DP[i] > DP[sol])) sol = i;
+            
             // Calculate parameters
             int it = i / 36000;
             int MPQ = (i / 3600) % 10, SB = (i / 360) % 10, M = (i / 36) % 10;
@@ -148,13 +154,6 @@ int main() {
                 pre[i + 1] = i;
             }
         }
-    }
-    
-    // Find the optimal solution
-    int sol = 7200000;
-    for (int i = 0; i < 36000 * max_it; i++) {
-        if (i / 36000 > sol / 36000) break;
-        if (DP[i] >= goal && (sol == 7200000 || DP[i] > DP[sol])) sol = i;
     }
     
     // Print output
