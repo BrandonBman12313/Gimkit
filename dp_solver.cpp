@@ -161,7 +161,7 @@ int main() {
         vector<int> output;
         for (int i = sol; i != s; i = pre[i]) output.push_back(i);
         reverse(output.begin(), output.end());
-        cout << "Iterations: " << sol / 36000 << endl;
+        cout << "Optimal strategy to reach $" << format(goal) << " from $" << format(start) << " in " << sol / 36000 << " iterations:" << endl;
         for (int i = 0; i < output.size(); i++) {
             int it = output[i] / 36000;
             int MPQ = (output[i] / 3600) % 10, SB = (output[i] / 360) % 10, M = (output[i] / 36) % 10;
@@ -230,5 +230,5 @@ int main() {
             else cout << "Error: Something went wrong" << endl;
         }
     }
-    else cout << "No strategy to reach $" << goal << " from $" << start << " in " << max_it << " iterations could be found" << endl;
+    else cout << "No strategy to reach $" << format(goal) << " from $" << format(start) << " in " << max_it << " iterations could be found" << endl;
 }
