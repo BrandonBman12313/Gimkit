@@ -1,6 +1,8 @@
 # Gimkit
 Ever wondered about what the optimal [Gimkit](https://gimkit.com) strategy is? Well, now you can get a definite answer with `dp_solver.cpp`, which uses a Dynamic Programming algorithm to search for the optimal Gimkit strategy. This algorithm can calculate the optimal strategy from any arbitary starting state.
 
+See [this link](https://onlinegdb.com/B1dEnuu2E) to run `dp_solver.cpp`.
+
 ## How to use
 ```
 // Initial conditions
