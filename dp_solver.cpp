@@ -137,9 +137,9 @@ int main() {
             }
             
             // Buy the rebooter
-            if (R == 0 && DP[i] - pcost(1, DP[i]) > DP[i - i % 9 + 9]) {
-                DP[i - i % 9 + 9] = DP[i] - pcost(1, DP[i]);
-                pre[i - i % 9 + 9] = i;
+            if (R == 0 && DP[i] - pcost(1, DP[i]) > DP[i - i % 36 + 9]) {
+                DP[i - i % 36 + 9] = DP[i] - pcost(1, DP[i]);
+                pre[i - i % 36 + 9] = i;
             }
             
             // Buy the mini bonus
@@ -206,14 +206,14 @@ int main() {
                 cout << "Buy the Level " << M << " (x" << format(val[2][M]) << ") multiplier for $" << format(cost[D][2][M]) << ", making your total $" << format(DP[output[i]]) << endl;
             }
             
-            // Buy the discounter
-            else if (D != (output[i - 1] / 18) % 2) {
-                cout << "Buy and use the discounter for $" << format(pcost(0, DP[output[i - 1]])) << ", making your total $" << format(DP[output[i]]) << endl;
-            }
-            
             // Buy the rebooter
             else if (R != (output[i - 1] / 9) % 2) {
                 cout << "Buy and use the rebooter for $" << format(pcost(1, DP[output[i - 1]])) << ", making your total $" << format(DP[output[i]]) << endl;
+            }
+            
+            // Buy the discounter
+            else if (D != (output[i - 1] / 18) % 2) {
+                cout << "Buy and use the discounter for $" << format(pcost(0, DP[output[i - 1]])) << ", making your total $" << format(DP[output[i]]) << endl;
             }
             
             // Buy the mini bonus
@@ -232,3 +232,4 @@ int main() {
     }
     else cout << "No strategy to reach $" << format(goal) << " from $" << format(start) << " in " << max_it << " iterations could be found" << endl;
 }
+
