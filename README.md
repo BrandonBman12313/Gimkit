@@ -28,7 +28,7 @@ Change these values to alter the initial state:
 ## How it works
 Without considering player interactions, the *state* of a Gimkit game can actually be represented with only eight parameters: money, the levels of the money per question, streak bonus, and multiplier updates, and the status of four power-ups. For any such state, we want to minimize the number of questions ("iterations") needed to reach that state. However, money can range over a large range of values, so instead, we will swap money and the number of questions answered. Realistically, a player will only answer at most 200 questions, so this will reduce the total number of states. Note that a state only contains information about the current status in the game, not the particular path used to reach that state.
 
-State parameters
+State parameters:
 - **it** - The number of questions answered
 - **MPQ** - The level of the money per question upgrade (Starts from 0)
 - **SB** - The level of the streak bonus upgrade (Starts from 0)
