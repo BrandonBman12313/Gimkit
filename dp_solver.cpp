@@ -193,17 +193,17 @@ int main() {
             
             // Upgrade money per question
             else if (MPQ != (output[i - 1] / 3600) % 10) {
-                cout << "Buy the Level " << MPQ << " ($" << format(val[0][MPQ]) << ") money per question upgrade for $" << format(cost[D][0][MPQ]) << ", making your total $" << format(DP[output[i]]) << endl;
+                cout << "Buy the Level " << MPQ + 1 << " ($" << format(val[0][MPQ]) << ") money per question upgrade for $" << format(cost[D][0][MPQ]) << ", making your total $" << format(DP[output[i]]) << endl;
             }
             
             // Upgrade streak bonus
             else if (SB != (output[i - 1] / 360) % 10) {
-                cout << "Buy the Level " << SB << " ($" << format(val[1][SB]) << ") streak bonus upgrade for $" << format(cost[D][1][SB]) << ", making your total $" << format(DP[output[i]]) << endl;
+                cout << "Buy the Level " << SB + 1 << " ($" << format(val[1][SB]) << ") streak bonus upgrade for $" << format(cost[D][1][SB]) << ", making your total $" << format(DP[output[i]]) << endl;
             }
             
             // Upgrade multiplier
             else if (M != (output[i - 1] / 36) % 10) {
-                cout << "Buy the Level " << M << " (x" << format(val[2][M]) << ") multiplier for $" << format(cost[D][2][M]) << ", making your total $" << format(DP[output[i]]) << endl;
+                cout << "Buy the Level " << M + 1 << " (x" << format(val[2][M]) << ") multiplier for $" << format(cost[D][2][M]) << ", making your total $" << format(DP[output[i]]) << endl;
             }
             
             // Buy the rebooter
@@ -232,4 +232,3 @@ int main() {
     }
     else cout << "No strategy to reach $" << format(goal) << " from $" << format(start) << " in " << max_it << " iterations could be found" << endl;
 }
-
