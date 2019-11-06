@@ -1,4 +1,6 @@
 # Gimkit
+Gimkit, an assessment tool with a monetary component, has been described as “Kahoot on steroids”, featuring upgrades and power-ups. These aspects make Gimkit a strategically intriguing and interesting game to analyze.
+
 Ever wondered about what the optimal [Gimkit](https://gimkit.com) strategy is? Well, now you can get a definite answer with `dp_solver.cpp`, which uses a Dynamic Programming algorithm to search for the optimal Gimkit strategy. This algorithm can calculate the optimal strategy from any arbitary starting state.
 
 See [this link](https://onlinegdb.com/rJNOKO324) to run `dp_solver.cpp`.
